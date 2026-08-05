@@ -15,6 +15,8 @@ function History() {
 
     const [editText, setEditText] = useState("");
 
+    const [loading, setLoading] = useState(true);
+
 
 
 
@@ -43,8 +45,11 @@ function History() {
 
             console.log(error);
 
-        }
+        } finally {
 
+          setLoading(false);
+  
+      }
     };
 
 
@@ -213,7 +218,14 @@ function History() {
 
 
             {
-                history.length === 0 ? (
+
+              loading ? (
+
+              <p className="text-gray-600">
+                Loading content history...
+              </p>
+
+               ): history.length === 0 ? (
 
                     <p>
                         Your previous AI generated content will appear here.

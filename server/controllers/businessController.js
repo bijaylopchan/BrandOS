@@ -13,14 +13,10 @@ const createBusinessProfile = async (req, res) => {
         } = req.body;
 
 
-        const profile = await prisma.businessProfile.create({
 
-            data: {
+        const existingProfile = await prisma.businessProfile.findFirst({
 
-                businessName,
-                industry,
-                audience,
-                tone,
+            where: {
 
                 userId: req.user.id
 
@@ -29,16 +25,76 @@ const createBusinessProfile = async (req, res) => {
         });
 
 
-        res.status(201).json(profile);
+
+
+        let profile;
+
+
+
+
+        if(existingProfile) {
+
+
+            profile = await prisma.businessProfile.update({
+
+                where: {
+
+                    id: existingProfile.id
+
+                },
+
+
+                data: {
+
+                    businessName,
+                    industry,
+                    audience,
+                    tone
+
+                }
+
+            });
+
+
+
+        } else {
+
+
+
+            profile = await prisma.businessProfile.create({
+
+                data: {
+
+                    businessName,
+                    industry,
+                    audience,
+                    tone,
+
+                    userId: req.user.id
+
+                }
+
+            });
+
+
+        }
+
+
+
+
+        res.json(profile);
+
 
 
     } catch(error) {
+
 
         res.status(500).json({
 
             message: error.message
 
         });
+
 
     }
 
@@ -75,11 +131,65 @@ const getBusinessProfile = async (req, res) => {
 
 };
 
+const updateBusinessProfile = async (req, res) => {
+
+    try {
+
+        const {
+            businessName,
+            industry,
+            audience,
+            tone
+        } = req.body;
+
+
+
+        const updatedProfile = await prisma.businessProfile.update({
+
+            where: {
+
+                id: Number(req.params.id)
+
+            },
+
+
+            data: {
+
+                businessName,
+                industry,
+                audience,
+                tone
+
+            }
+
+        });
+
+
+
+        res.json(updatedProfile);
+
+
+
+    } catch(error) {
+
+
+        res.status(500).json({
+
+            message: error.message
+
+        });
+
+
+    }
+
+};
+
 
 
 module.exports = {
 
     createBusinessProfile,
-    getBusinessProfile
+    getBusinessProfile,
+    updateBusinessProfile
 
 };

@@ -201,30 +201,25 @@ const deleteContent = async (req, res) => {
 
 };
 
+
 const getContentStats = async (req, res) => {
 
     try {
 
 
-        const total = await prisma.content.count({
+        const contents = await prisma.content.findMany({
 
             where: {
 
                 userId: req.user.id
 
-            }
+            },
 
-        });
+            include: {
 
+                seoAnalysis: true,
 
-
-        const blogPosts = await prisma.content.count({
-
-            where: {
-
-                userId: req.user.id,
-
-                type: "Blog Post"
+                toneAnalysis: true
 
             }
 
@@ -232,31 +227,73 @@ const getContentStats = async (req, res) => {
 
 
 
-        const socialPosts = await prisma.content.count({
-
-            where: {
-
-                userId: req.user.id,
-
-                type: "Social Media Caption"
-
-            }
-
-        });
+        const total = contents.length;
 
 
 
-        const emails = await prisma.content.count({
+        const blogPosts = contents.filter(
+            item => item.type === "Blog Post"
+        ).length;
 
-            where: {
 
-                userId: req.user.id,
 
-                type: "Email Campaign"
+        const socialPosts = contents.filter(
+            item => item.type === "Social Media Caption"
+        ).length;
 
-            }
 
-        });
+
+        const emails = contents.filter(
+            item => item.type === "Email Campaign"
+        ).length;
+
+
+
+
+
+        const seoScores = contents
+
+            .filter(item => item.seoAnalysis)
+
+            .map(item => item.seoAnalysis.score);
+
+
+
+
+        const averageSEO = seoScores.length
+
+            ? Math.round(
+                seoScores.reduce((a,b)=>a+b,0)
+                /
+                seoScores.length
+            )
+
+            : 0;
+
+
+
+
+
+        const toneConfidence = contents
+
+            .filter(item => item.toneAnalysis)
+
+            .map(item => item.toneAnalysis.confidence);
+
+
+
+
+        const averageToneConfidence = toneConfidence.length
+
+            ? Math.round(
+                toneConfidence.reduce((a,b)=>a+b,0)
+                /
+                toneConfidence.length
+            )
+
+            : 0;
+
+
 
 
 
@@ -268,7 +305,12 @@ const getContentStats = async (req, res) => {
 
             socialPosts,
 
-            emails
+            emails,
+
+            averageSEO,
+
+            averageToneConfidence
+
 
         });
 
@@ -279,7 +321,7 @@ const getContentStats = async (req, res) => {
 
         res.status(500).json({
 
-            message: error.message
+            message:error.message
 
         });
 
@@ -287,6 +329,8 @@ const getContentStats = async (req, res) => {
     }
 
 };
+
+
 const analyzeSEO = async (req, res) => {
 
     try {

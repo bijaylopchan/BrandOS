@@ -5,7 +5,8 @@ const router = express.Router();
 
 const {
     createBusinessProfile,
-    getBusinessProfile
+    getBusinessProfile,
+    updateBusinessProfile
 } = require("../controllers/businessController");
 
 
@@ -21,6 +22,12 @@ router.get(
     "/",
     authMiddleware,
     getBusinessProfile
+);
+
+router.put(
+    "/:id",
+    authMiddleware,
+    updateBusinessProfile
 );
 
 

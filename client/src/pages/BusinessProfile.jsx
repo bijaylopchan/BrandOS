@@ -13,33 +13,79 @@ function BusinessProfile() {
         tone: ""
 
     });
+
+
+    const [profileId, setProfileId] = useState(null);
+
+
+
+
+
     useEffect(() => {
 
         loadProfile();
-    
+
     }, []);
-    
-    
-    
+
+
+
+
+
+
     const loadProfile = async () => {
-    
+
+
         try {
-    
-            const response = await api.get("/business");
-    
-            console.log(response.data);
-    
+
+
+            const response = await api.get(
+                "/business"
+            );
+
+
+            if(response.data) {
+
+
+                setProfileId(response.data.id);
+
+
+                setFormData({
+
+                    businessName: response.data.businessName,
+
+                    industry: response.data.industry,
+
+                    audience: response.data.audience || "",
+
+                    tone: response.data.tone || ""
+
+                });
+
+
+            }
+
+
+
         } catch(error) {
-    
+
+
             console.log(error);
-    
+
+
         }
-    
+
+
     };
 
 
 
+
+
+
+
+
     const handleChange = (e) => {
+
 
         setFormData({
 
@@ -49,42 +95,68 @@ function BusinessProfile() {
 
         });
 
+
     };
+
+
+
+
+
+
 
 
 
     const handleSubmit = async (e) => {
 
+
         e.preventDefault();
+
 
 
         try {
 
 
-            const response = await api.post(
-
-                "/business",
-
-                formData,
-
-                {
-
-                    headers: {
-
-                        Authorization:
-                        `Bearer ${localStorage.getItem("token")}`
-
-                    }
-
-                }
-
-            );
+            if(profileId) {
 
 
-            console.log(response.data);
+                // Update existing profile
+
+                await api.put(
+
+                    `/business/${profileId}`,
+
+                    formData
+
+                );
 
 
-            alert("Business profile saved!");
+                alert("Business profile updated!");
+
+
+
+            } else {
+
+
+                // Create new profile
+
+                const response = await api.post(
+
+                    "/business",
+
+                    formData
+
+                );
+
+
+                setProfileId(response.data.id);
+
+
+                alert("Business profile created!");
+
+            }
+
+
+
 
 
         } catch(error) {
@@ -100,9 +172,14 @@ function BusinessProfile() {
 
 
 
+
+
+
+
     return (
 
         <div>
+
 
 
             <h1 className="text-4xl font-bold mb-6">
@@ -113,19 +190,28 @@ function BusinessProfile() {
 
 
 
+
+
             <div className="bg-white p-8 rounded-xl shadow">
+
 
 
                 <form onSubmit={handleSubmit}>
 
 
+
+
+
+
                     <div className="mb-5">
+
 
                         <label className="block mb-2 font-medium">
 
                             Business Name
 
                         </label>
+
 
 
                         <input
@@ -142,18 +228,26 @@ function BusinessProfile() {
 
                         />
 
+
                     </div>
+
+
+
+
+
 
 
 
 
                     <div className="mb-5">
 
+
                         <label className="block mb-2 font-medium">
 
                             Industry
 
                         </label>
+
 
 
                         <input
@@ -170,18 +264,26 @@ function BusinessProfile() {
 
                         />
 
+
                     </div>
+
+
+
+
+
 
 
 
 
                     <div className="mb-5">
 
+
                         <label className="block mb-2 font-medium">
 
                             Target Audience
 
                         </label>
+
 
 
                         <input
@@ -198,18 +300,26 @@ function BusinessProfile() {
 
                         />
 
+
                     </div>
+
+
+
+
+
 
 
 
 
                     <div className="mb-5">
 
+
                         <label className="block mb-2 font-medium">
 
                             Brand Tone
 
                         </label>
+
 
 
                         <select
@@ -224,24 +334,38 @@ function BusinessProfile() {
 
                         >
 
+
+
                             <option value="">
+
                                 Select tone
+
                             </option>
 
 
+
                             <option>
+
                                 Professional
+
                             </option>
 
 
+
                             <option>
+
                                 Friendly
+
                             </option>
+
 
 
                             <option>
+
                                 Funny
+
                             </option>
+
 
 
                         </select>
@@ -252,21 +376,36 @@ function BusinessProfile() {
 
 
 
+
+
+
+
                     <button
 
                         className="bg-blue-600 text-white px-6 py-3 rounded-lg"
 
                     >
 
-                        Save Profile
+
+                        {
+                            profileId
+                            ? "Update Profile"
+                            : "Save Profile"
+                        }
+
 
                     </button>
+
+
+
 
 
                 </form>
 
 
+
             </div>
+
 
 
         </div>
@@ -274,6 +413,7 @@ function BusinessProfile() {
     );
 
 }
+
 
 
 export default BusinessProfile;
