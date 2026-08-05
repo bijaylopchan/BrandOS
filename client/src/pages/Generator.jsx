@@ -81,6 +81,10 @@ function Generator() {
 
                     businessName: businessProfile.businessName,
 
+                    industry: businessProfile.industry,
+
+                    audience: businessProfile.audience,
+
                     contentType: formData.contentType,
 
                     tone: businessProfile.tone
@@ -251,7 +255,7 @@ function Generator() {
 
                     disabled={!businessProfile}
 
-                    className="bg-blue-600 text-white px-6 py-3 rounded-lg"
+                    className="bg-blue-600 text-white px-6 py-3 rounded-lg disabled:bg-gray-400"
 
                 >
 
