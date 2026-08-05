@@ -5,7 +5,8 @@ const router = express.Router();
 const {
     generateContent,
     getHistory,
-    updateContent
+    updateContent,
+    deleteContent
 } = require("../controllers/contentController");
 
 const authMiddleware = require("../middleware/authMiddleware");
@@ -27,6 +28,12 @@ router.put(
     "/:id",
     authMiddleware,
     updateContent
+);
+
+router.delete(
+    "/:id",
+    authMiddleware,
+    deleteContent
 );
 
 module.exports = router;

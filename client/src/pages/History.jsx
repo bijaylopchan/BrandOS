@@ -98,6 +98,31 @@ function History() {
 
 
     };
+    const deleteContent = async (id) => {
+
+      try {
+  
+  
+          await api.delete(
+  
+              `/content/${id}`
+  
+          );
+  
+  
+          fetchHistory();
+  
+  
+  
+      } catch(error) {
+  
+  
+          console.log(error);
+  
+  
+      }
+  
+  };
 
 
 
@@ -218,17 +243,38 @@ function History() {
                                 ) : (
 
 
-                                    <button
+                                    
+                                  <div className="flex gap-3 mt-4">
 
-                                        onClick={() => startEdit(item)}
 
-                                        className="mt-4 bg-blue-600 text-white px-5 py-2 rounded-lg"
-
-                                    >
-
-                                        Edit
-
-                                    </button>
+                                  <button
+                              
+                                      onClick={() => startEdit(item)}
+                              
+                                      className="bg-blue-600 text-white px-5 py-2 rounded-lg"
+                              
+                                  >
+                              
+                                      Edit
+                              
+                                  </button>
+                              
+                              
+                              
+                                  <button
+                              
+                                      onClick={() => deleteContent(item.id)}
+                              
+                                      className="bg-red-600 text-white px-5 py-2 rounded-lg"
+                              
+                                  >
+                              
+                                      Delete
+                              
+                                  </button>
+                              
+                              
+                              </div>
 
 
                                 )

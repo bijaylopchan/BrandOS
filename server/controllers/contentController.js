@@ -159,10 +159,53 @@ const updateContent = async (req, res) => {
     }
 
 };
+
+const deleteContent = async (req, res) => {
+
+    try {
+
+
+        const deletedContent = await prisma.content.delete({
+
+            where: {
+
+                id: Number(req.params.id)
+
+            }
+
+        });
+
+
+
+        res.json({
+
+            message: "Content deleted successfully",
+
+            deletedContent
+
+        });
+
+
+
+    } catch(error) {
+
+
+        res.status(500).json({
+
+            message: error.message
+
+        });
+
+
+    }
+
+};
+
 module.exports = {
 
     generateContent,
     getHistory,
-    updateContent
+    updateContent,
+    deleteContent
 
 };
