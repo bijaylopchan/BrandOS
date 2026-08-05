@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+
+  businessProfiles BusinessProfile[]
+  contents         Content[]
+}
+
+
+model BusinessProfile {
+  id          Int      @id @default(autoincrement())
+  businessName String
+  industry     String
+  audience     String?
+  tone         String?
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+
+model Content {
+  id        Int      @id @default(autoincrement())
+  type      String
+  title     String
+  body      String
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  seoAnalysis  SEOAnalysis?
+  toneAnalysis ToneAnalysis?
+}
+
+
+model SEOAnalysis {
+  id          Int @id @default(autoincrement())
+
+  score       Int
+  keywords    String
+  suggestions String
+
+  contentId Int @unique
+  content   Content @relation(fields: [contentId], references: [id])
+}
+
+
+model ToneAnalysis {
+  id        Int @id @default(autoincrement())
+
+  tone      String
+  confidence Int
+
+  contentId Int @unique
+  content   Content @relation(fields: [contentId], references: [id])
+}
