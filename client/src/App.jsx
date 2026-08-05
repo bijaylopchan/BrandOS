@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Navbar from "./components/Navbar";
 
 import Home from "./pages/Home";
@@ -7,7 +7,11 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Generator from "./pages/Generator";
-
+import DashboardLayout from "./layouts/DashboardLayout";
+import History from "./pages/History";
+import Analytics from "./pages/Analytics";
+import Settings from "./pages/Settings";
+import BusinessProfile from "./pages/BusinessProfile";
 
 function App() {
 
@@ -25,9 +29,16 @@ function App() {
 
         <Route path="/register" element={<Register />} />
 
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout><Dashboard /></DashboardLayout></ProtectedRoute>} />
 
-        <Route path="/generator" element={<Generator />} />
+        <Route path="/generator" element={<ProtectedRoute><DashboardLayout><Generator /></DashboardLayout></ProtectedRoute>} />
+        <Route path="/history" element={<ProtectedRoute><DashboardLayout><History /></DashboardLayout></ProtectedRoute>} />
+        <Route path="/analytics" element={<ProtectedRoute><DashboardLayout><Analytics /></DashboardLayout></ProtectedRoute>} />
+        <Route path="/settings" element={<ProtectedRoute><DashboardLayout><Settings /></DashboardLayout></ProtectedRoute>} />
+        <Route path="/business-profile" element={<ProtectedRoute><DashboardLayout><BusinessProfile /></DashboardLayout></ProtectedRoute>} />
+
+
+        
 
       </Routes>
 
