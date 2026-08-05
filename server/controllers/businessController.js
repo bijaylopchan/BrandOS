@@ -45,8 +45,41 @@ const createBusinessProfile = async (req, res) => {
 };
 
 
+const getBusinessProfile = async (req, res) => {
+
+    try {
+
+        const profile = await prisma.businessProfile.findFirst({
+
+            where: {
+
+                userId: req.user.id
+
+            }
+
+        });
+
+
+        res.json(profile);
+
+
+    } catch(error) {
+
+        res.status(500).json({
+
+            message: error.message
+
+        });
+
+    }
+
+};
+
+
+
 module.exports = {
 
-    createBusinessProfile
+    createBusinessProfile,
+    getBusinessProfile
 
 };

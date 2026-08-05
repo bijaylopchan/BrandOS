@@ -4,7 +4,8 @@ const router = express.Router();
 
 
 const {
-    createBusinessProfile
+    createBusinessProfile,
+    getBusinessProfile
 } = require("../controllers/businessController");
 
 
@@ -15,6 +16,11 @@ router.post(
     "/",
     authMiddleware,
     createBusinessProfile
+);
+router.get(
+    "/",
+    authMiddleware,
+    getBusinessProfile
 );
 
 
