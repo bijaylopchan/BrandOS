@@ -6,7 +6,8 @@ const {
     generateContent,
     getHistory,
     updateContent,
-    deleteContent
+    deleteContent,
+    getContentStats
 } = require("../controllers/contentController");
 
 const authMiddleware = require("../middleware/authMiddleware");
@@ -34,6 +35,12 @@ router.delete(
     "/:id",
     authMiddleware,
     deleteContent
+);
+
+router.get(
+    "/stats",
+    authMiddleware,
+    getContentStats
 );
 
 module.exports = router;

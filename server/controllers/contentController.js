@@ -201,11 +201,99 @@ const deleteContent = async (req, res) => {
 
 };
 
+const getContentStats = async (req, res) => {
+
+    try {
+
+
+        const total = await prisma.content.count({
+
+            where: {
+
+                userId: req.user.id
+
+            }
+
+        });
+
+
+
+        const blogPosts = await prisma.content.count({
+
+            where: {
+
+                userId: req.user.id,
+
+                type: "Blog Post"
+
+            }
+
+        });
+
+
+
+        const socialPosts = await prisma.content.count({
+
+            where: {
+
+                userId: req.user.id,
+
+                type: "Social Media Caption"
+
+            }
+
+        });
+
+
+
+        const emails = await prisma.content.count({
+
+            where: {
+
+                userId: req.user.id,
+
+                type: "Email Campaign"
+
+            }
+
+        });
+
+
+
+        res.json({
+
+            total,
+
+            blogPosts,
+
+            socialPosts,
+
+            emails
+
+        });
+
+
+
+    } catch(error) {
+
+
+        res.status(500).json({
+
+            message: error.message
+
+        });
+
+
+    }
+
+};
+
 module.exports = {
 
     generateContent,
     getHistory,
     updateContent,
-    deleteContent
+    deleteContent,
+    getContentStats
 
 };
