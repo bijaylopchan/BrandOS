@@ -7,7 +7,8 @@ const {
     getHistory,
     updateContent,
     deleteContent,
-    getContentStats
+    getContentStats,
+    analyzeSEO
 } = require("../controllers/contentController");
 
 const authMiddleware = require("../middleware/authMiddleware");
@@ -41,6 +42,12 @@ router.get(
     "/stats",
     authMiddleware,
     getContentStats
+);
+
+router.post(
+    "/:id/seo",
+    authMiddleware,
+    analyzeSEO
 );
 
 module.exports = router;

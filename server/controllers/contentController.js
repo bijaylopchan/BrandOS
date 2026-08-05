@@ -287,6 +287,106 @@ const getContentStats = async (req, res) => {
     }
 
 };
+const analyzeSEO = async (req, res) => {
+
+    try {
+
+
+        const content = await prisma.content.findUnique({
+
+            where: {
+
+                id: Number(req.params.id)
+
+            }
+
+        });
+
+
+
+        if (!content) {
+
+            return res.status(404).json({
+
+                message: "Content not found"
+
+            });
+
+        }
+
+
+
+        // Fake SEO analysis for now
+
+        const seoResult = {
+
+            score: 85,
+
+            keywords: "marketing, business, audience, brand",
+
+            suggestions:
+            "Add more relevant keywords and improve content structure."
+
+        };
+
+
+
+        const savedSEO = await prisma.sEOAnalysis.upsert({
+
+            where: {
+
+                contentId: content.id
+
+            },
+
+
+            update: {
+
+                score: seoResult.score,
+
+                keywords: seoResult.keywords,
+
+                suggestions: seoResult.suggestions
+
+            },
+
+
+            create: {
+
+                score: seoResult.score,
+
+                keywords: seoResult.keywords,
+
+                suggestions: seoResult.suggestions,
+
+                contentId: content.id
+
+            }
+
+        });
+
+
+
+        res.json(savedSEO);
+
+
+
+    } catch(error) {
+
+
+        console.log(error);
+
+
+        res.status(500).json({
+
+            message: error.message
+
+        });
+
+
+    }
+
+};
 
 module.exports = {
 
@@ -294,6 +394,7 @@ module.exports = {
     getHistory,
     updateContent,
     deleteContent,
-    getContentStats
+    getContentStats,
+    analyzeSEO
 
 };

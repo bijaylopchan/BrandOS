@@ -7,6 +7,8 @@ function History() {
 
     const [history, setHistory] = useState([]);
 
+    const [seoResults, setSeoResults] = useState({});
+
     const [editingId, setEditingId] = useState(null);
 
     const [editText, setEditText] = useState("");
@@ -50,11 +52,9 @@ function History() {
 
     const startEdit = (item) => {
 
-
         setEditingId(item.id);
 
         setEditText(item.body);
-
 
     };
 
@@ -65,7 +65,6 @@ function History() {
 
     const saveEdit = async (id) => {
 
-
         try {
 
 
@@ -74,9 +73,7 @@ function History() {
                 `/content/${id}`,
 
                 {
-
                     body: editText
-
                 }
 
             );
@@ -90,39 +87,81 @@ function History() {
 
         } catch(error) {
 
+            console.log(error);
+
+        }
+
+    };
+
+
+
+
+
+
+    const deleteContent = async (id) => {
+
+        try {
+
+
+            await api.delete(
+
+                `/content/${id}`
+
+            );
+
+
+            fetchHistory();
+
+
+
+        } catch(error) {
+
 
             console.log(error);
 
 
         }
 
+    };
+
+
+
+
+
+
+
+    const analyzeSEO = async (id) => {
+
+        try {
+
+
+            const response = await api.post(
+
+                `/content/${id}/seo`
+
+            );
+
+
+            setSeoResults({
+
+                ...seoResults,
+
+                [id]: response.data
+
+            });
+
+
+
+        } catch(error) {
+
+
+            console.log(error);
+
+
+        }
 
     };
-    const deleteContent = async (id) => {
 
-      try {
-  
-  
-          await api.delete(
-  
-              `/content/${id}`
-  
-          );
-  
-  
-          fetchHistory();
-  
-  
-  
-      } catch(error) {
-  
-  
-          console.log(error);
-  
-  
-      }
-  
-  };
 
 
 
@@ -177,6 +216,7 @@ function History() {
 
 
 
+
                             <p className="text-gray-500 mb-3">
 
                                 {item.type}
@@ -209,15 +249,69 @@ function History() {
                                 ) : (
 
 
-                                    <p>
+                                    <div>
 
-                                        {item.body}
 
-                                    </p>
+                                        <p>
+
+                                            {item.body}
+
+                                        </p>
+
+
+
+
+                                        {
+                                            seoResults[item.id] && (
+
+                                                <div className="mt-4 bg-gray-100 p-4 rounded-lg">
+
+
+                                                    <h3 className="font-bold">
+
+                                                        SEO Analysis
+
+                                                    </h3>
+
+
+
+                                                    <p>
+
+                                                        Score: {seoResults[item.id].score}/100
+
+                                                    </p>
+
+
+
+                                                    <p>
+
+                                                        Keywords: {seoResults[item.id].keywords}
+
+                                                    </p>
+
+
+
+                                                    <p>
+
+                                                        Suggestions: {seoResults[item.id].suggestions}
+
+                                                    </p>
+
+
+
+                                                </div>
+
+                                            )
+                                        }
+
+
+                                    </div>
 
 
                                 )
                             }
+
+
 
 
 
@@ -243,42 +337,62 @@ function History() {
                                 ) : (
 
 
-                                    
-                                  <div className="flex gap-3 mt-4">
+                                    <div className="flex gap-3 mt-4">
 
 
-                                  <button
-                              
-                                      onClick={() => startEdit(item)}
-                              
-                                      className="bg-blue-600 text-white px-5 py-2 rounded-lg"
-                              
-                                  >
-                              
-                                      Edit
-                              
-                                  </button>
-                              
-                              
-                              
-                                  <button
-                              
-                                      onClick={() => deleteContent(item.id)}
-                              
-                                      className="bg-red-600 text-white px-5 py-2 rounded-lg"
-                              
-                                  >
-                              
-                                      Delete
-                              
-                                  </button>
-                              
-                              
-                              </div>
+
+                                        <button
+
+                                            onClick={() => startEdit(item)}
+
+                                            className="bg-blue-600 text-white px-5 py-2 rounded-lg"
+
+                                        >
+
+                                            Edit
+
+                                        </button>
+
+
+
+
+
+                                        <button
+
+                                            onClick={() => deleteContent(item.id)}
+
+                                            className="bg-red-600 text-white px-5 py-2 rounded-lg"
+
+                                        >
+
+                                            Delete
+
+                                        </button>
+
+
+
+
+
+                                        <button
+
+                                            onClick={() => analyzeSEO(item.id)}
+
+                                            className="bg-purple-600 text-white px-5 py-2 rounded-lg"
+
+                                        >
+
+                                            Analyze SEO
+
+                                        </button>
+
+
+
+                                    </div>
 
 
                                 )
                             }
+
 
 
 
