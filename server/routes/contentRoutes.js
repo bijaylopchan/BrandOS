@@ -4,7 +4,8 @@ const router = express.Router();
 
 const {
     generateContent,
-    getHistory
+    getHistory,
+    updateContent
 } = require("../controllers/contentController");
 
 const authMiddleware = require("../middleware/authMiddleware");
@@ -22,6 +23,10 @@ router.get(
     authMiddleware,
     getHistory
 );
-
+router.put(
+    "/:id",
+    authMiddleware,
+    updateContent
+);
 
 module.exports = router;

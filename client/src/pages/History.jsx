@@ -1,9 +1,18 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 
+
 function History() {
 
+
     const [history, setHistory] = useState([]);
+
+    const [editingId, setEditingId] = useState(null);
+
+    const [editText, setEditText] = useState("");
+
+
+
 
     useEffect(() => {
 
@@ -12,23 +21,21 @@ function History() {
     }, []);
 
 
+
+
+
     const fetchHistory = async () => {
 
         try {
 
             const response = await api.get(
-                "/content/history",
-                {
-                    headers: {
-                        Authorization:
-                            `Bearer ${localStorage.getItem("token")}`
-                    }
-                }
+                "/content/history"
             );
 
             setHistory(response.data);
 
-        } catch (error) {
+
+        } catch(error) {
 
             console.log(error);
 
@@ -37,53 +44,218 @@ function History() {
     };
 
 
+
+
+
+
+    const startEdit = (item) => {
+
+
+        setEditingId(item.id);
+
+        setEditText(item.body);
+
+
+    };
+
+
+
+
+
+
+    const saveEdit = async (id) => {
+
+
+        try {
+
+
+            await api.put(
+
+                `/content/${id}`,
+
+                {
+
+                    body: editText
+
+                }
+
+            );
+
+
+            setEditingId(null);
+
+            fetchHistory();
+
+
+
+        } catch(error) {
+
+
+            console.log(error);
+
+
+        }
+
+
+    };
+
+
+
+
+
+
     return (
 
         <div>
 
+
             <h1 className="text-4xl font-bold mb-6">
+
                 Content History
+
             </h1>
+
+
+
 
 
             {
                 history.length === 0 ? (
 
-                    <p>Your previous AI generated content will appear here.</p>
+                    <p>
+                        Your previous AI generated content will appear here.
+                    </p>
+
 
                 ) : (
 
+
                     history.map((item) => (
 
+
                         <div
+
                             key={item.id}
+
                             className="bg-white shadow rounded-lg p-6 mb-4"
+
                         >
 
+
+
                             <h2 className="text-xl font-bold">
+
                                 {item.title}
+
                             </h2>
 
+
+
+
                             <p className="text-gray-500 mb-3">
+
                                 {item.type}
+
                             </p>
 
-                            <p>
-                                {item.body}
-                            </p>
+
+
+
+
+                            {
+                                editingId === item.id ? (
+
+
+                                    <textarea
+
+                                        value={editText}
+
+                                        onChange={(e) =>
+                                            setEditText(e.target.value)
+                                        }
+
+                                        className="w-full border p-3 rounded-lg"
+
+                                        rows="6"
+
+                                    />
+
+
+                                ) : (
+
+
+                                    <p>
+
+                                        {item.body}
+
+                                    </p>
+
+
+                                )
+                            }
+
+
+
+
+
+                            {
+                                editingId === item.id ? (
+
+
+                                    <button
+
+                                        onClick={() => saveEdit(item.id)}
+
+                                        className="mt-4 bg-green-600 text-white px-5 py-2 rounded-lg"
+
+                                    >
+
+                                        Save Changes
+
+                                    </button>
+
+
+                                ) : (
+
+
+                                    <button
+
+                                        onClick={() => startEdit(item)}
+
+                                        className="mt-4 bg-blue-600 text-white px-5 py-2 rounded-lg"
+
+                                    >
+
+                                        Edit
+
+                                    </button>
+
+
+                                )
+                            }
+
+
+
 
                         </div>
 
+
                     ))
+
 
                 )
 
             }
 
+
+
+
         </div>
 
     );
 
+
 }
+
 
 export default History;

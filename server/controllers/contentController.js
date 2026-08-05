@@ -38,12 +38,8 @@ const generateContent = async (req, res) => {
             `
         
         };
-        res.json({
 
-            content: response.output_text
         
-        });
-
         const savedContent = await prisma.content.create({
 
             data: {
@@ -120,9 +116,53 @@ const getHistory = async (req, res) => {
     }
 
 };
+
+const updateContent = async (req, res) => {
+
+    try {
+
+
+        const { body } = req.body;
+
+
+        const updatedContent = await prisma.content.update({
+
+            where: {
+
+                id: Number(req.params.id)
+
+            },
+
+            data: {
+
+                body: body
+
+            }
+
+        });
+
+
+        res.json(updatedContent);
+
+
+
+    } catch(error) {
+
+
+        res.status(500).json({
+
+            message: error.message
+
+        });
+
+
+    }
+
+};
 module.exports = {
 
     generateContent,
-    getHistory
+    getHistory,
+    updateContent
 
 };
