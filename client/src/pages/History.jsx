@@ -8,6 +8,8 @@ function History() {
     const [history, setHistory] = useState([]);
 
     const [seoResults, setSeoResults] = useState({});
+    
+    const [toneResults, setToneResults] = useState({});
 
     const [editingId, setEditingId] = useState(null);
 
@@ -162,11 +164,38 @@ function History() {
 
     };
 
+    const analyzeTone = async (id) => {
 
-
-
-
-
+      try {
+  
+  
+          const response = await api.post(
+  
+              `/content/${id}/tone`
+  
+          );
+  
+  
+  
+          setToneResults({
+  
+              ...toneResults,
+  
+              [id]: response.data
+  
+          });
+  
+  
+  
+      } catch(error) {
+  
+  
+          console.log(error);
+  
+  
+      }
+  
+  };
 
     return (
 
@@ -303,6 +332,24 @@ function History() {
 
                                             )
                                         }
+                                        {
+                                          toneResults[item.id] && (
+                                            <div className="mt-4 bg-yellow-100 p-4 rounded-lg">
+
+                                              <h3 className="font-bold">
+
+                                              Tone Analysis
+
+                                              </h3>
+                                              <p>
+                                              Tone: {toneResults[item.id].tone}
+                                              </p>
+                                              <p>
+                                              Confidence: {toneResults[item.id].confidence}%
+                                              </p>
+                                              </div>
+                                          )
+                                        }
 
 
                                     </div>
@@ -384,6 +431,19 @@ function History() {
                                             Analyze SEO
 
                                         </button>
+
+                                        <button
+
+                                            onClick={() => analyzeTone(item.id)}
+
+                                            className="bg-orange-600 text-white px-5 py-2 rounded-lg"
+
+                                        >
+
+
+                                            Analyze Tone
+
+                                         </button>
 
 
 

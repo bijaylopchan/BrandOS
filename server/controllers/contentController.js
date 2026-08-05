@@ -388,6 +388,103 @@ const analyzeSEO = async (req, res) => {
 
 };
 
+const analyzeTone = async (req, res) => {
+
+    try {
+
+
+        const content = await prisma.content.findUnique({
+
+            where: {
+
+                id: Number(req.params.id)
+
+            }
+
+        });
+
+
+
+        if (!content) {
+
+            return res.status(404).json({
+
+                message: "Content not found"
+
+            });
+
+        }
+
+
+
+
+        // Fake tone analysis for now
+
+        const toneResult = {
+
+            tone: "Professional",
+
+            confidence: 92
+
+        };
+
+
+
+
+        const savedTone = await prisma.toneAnalysis.upsert({
+
+            where: {
+
+                contentId: content.id
+
+            },
+
+
+            update: {
+
+                tone: toneResult.tone,
+
+                confidence: toneResult.confidence
+
+            },
+
+
+            create: {
+
+                tone: toneResult.tone,
+
+                confidence: toneResult.confidence,
+
+                contentId: content.id
+
+            }
+
+        });
+
+
+
+
+        res.json(savedTone);
+
+
+
+    } catch(error) {
+
+
+        console.log(error);
+
+
+        res.status(500).json({
+
+            message: error.message
+
+        });
+
+
+    }
+
+};
+
 module.exports = {
 
     generateContent,
@@ -395,6 +492,7 @@ module.exports = {
     updateContent,
     deleteContent,
     getContentStats,
-    analyzeSEO
+    analyzeSEO,
+    analyzeTone
 
 };

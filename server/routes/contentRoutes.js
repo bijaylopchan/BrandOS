@@ -8,7 +8,8 @@ const {
     updateContent,
     deleteContent,
     getContentStats,
-    analyzeSEO
+    analyzeSEO,
+    analyzeTone
 } = require("../controllers/contentController");
 
 const authMiddleware = require("../middleware/authMiddleware");
@@ -49,5 +50,13 @@ router.post(
     authMiddleware,
     analyzeSEO
 );
+
+router.post(
+    "/:id/tone",
+    authMiddleware,
+    analyzeTone
+);
+
+
 
 module.exports = router;
