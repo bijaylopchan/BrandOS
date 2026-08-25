@@ -33,11 +33,16 @@ function Dashboard() {
     });
 
     const [recentContent, setRecentContent] = useState([]);
+
+    const [user, setUser] = useState(null);
+
     const [loading, setLoading] = useState(true);
 
 
     useEffect(() => {
+
         loadDashboard();
+
     }, []);
 
 
@@ -47,12 +52,15 @@ function Dashboard() {
 
             await Promise.all([
                 fetchStats(),
-                fetchRecentContent()
+                fetchRecentContent(),
+                fetchCurrentUser()
             ]);
+
 
         } catch (error) {
 
             console.log(error);
+
 
         } finally {
 
@@ -67,9 +75,15 @@ function Dashboard() {
 
         try {
 
-            const response = await api.get("/content/stats");
+            const response = await api.get(
+                "/content/stats"
+            );
 
-            setStats(response.data);
+
+            setStats(
+                response.data
+            );
+
 
         } catch (error) {
 
@@ -84,13 +98,45 @@ function Dashboard() {
 
         try {
 
-            const response = await api.get("/content/history");
+            const response = await api.get(
+                "/content/history"
+            );
 
-            setRecentContent(response.data.slice(0, 3));
+
+            setRecentContent(
+                response.data.slice(0, 3)
+            );
+
 
         } catch (error) {
 
             console.log(error);
+
+        }
+
+    };
+
+
+    const fetchCurrentUser = async () => {
+
+        try {
+
+            const response = await api.get(
+                "/auth/me"
+            );
+
+
+            setUser(
+                response.data
+            );
+
+
+        } catch (error) {
+
+            console.log(
+                "Failed to load dashboard user:",
+                error
+            );
 
         }
 
@@ -128,11 +174,17 @@ function Dashboard() {
             return 0;
         }
 
+
         return Math.round(
             (value / totalForPercentage) * 100
         );
 
     };
+
+
+    const displayName =
+        user?.name?.split(" ")[0] ||
+        "User";
 
 
     if (loading) {
@@ -156,21 +208,28 @@ function Dashboard() {
 
         <div className="space-y-8">
 
-            {/* Hero */}
+
+            {/* HERO */}
 
             <section className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-50 via-white to-purple-50 p-8">
 
                 <div className="relative z-10">
 
                     <h1 className="text-4xl font-bold text-gray-900">
-                        Welcome back, Bijay! 👋
+
+                        Welcome back, {displayName}! 👋
+
                     </h1>
 
+
                     <p className="mt-2 text-gray-600">
+
                         Manage your AI-generated marketing content from one place.
+
                     </p>
 
                 </div>
+
 
                 <div className="absolute -right-12 -top-16 h-56 w-56 rounded-full bg-blue-200 opacity-40 blur-3xl" />
 
@@ -179,105 +238,158 @@ function Dashboard() {
             </section>
 
 
-            {/* Stat Cards */}
+            {/* STAT CARDS */}
 
             <section className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+
+
+                {/* TOTAL CONTENT */}
 
                 <div className="rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
 
                     <div className="flex items-center justify-between">
 
                         <div className="rounded-xl bg-blue-100 p-3 text-blue-600">
+
                             <FileText size={22} />
+
                         </div>
 
+
                         <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
+
                             All content
+
                         </span>
 
                     </div>
 
+
                     <p className="mt-5 text-sm font-medium text-gray-500">
+
                         Total Content
+
                     </p>
 
+
                     <p className="mt-1 text-4xl font-bold text-blue-600">
+
                         {stats.total}
+
                     </p>
 
                 </div>
 
+
+                {/* BLOG POSTS */}
 
                 <div className="rounded-2xl border border-green-100 bg-gradient-to-br from-green-50 to-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
 
                     <div className="flex items-center justify-between">
 
                         <div className="rounded-xl bg-green-100 p-3 text-green-600">
+
                             <PencilLine size={22} />
+
                         </div>
 
+
                         <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+
                             Published
+
                         </span>
 
                     </div>
 
+
                     <p className="mt-5 text-sm font-medium text-gray-500">
+
                         Blog Posts
+
                     </p>
 
+
                     <p className="mt-1 text-4xl font-bold text-green-600">
+
                         {stats.blogPosts}
+
                     </p>
 
                 </div>
 
+
+                {/* SOCIAL POSTS */}
 
                 <div className="rounded-2xl border border-purple-100 bg-gradient-to-br from-purple-50 to-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
 
                     <div className="flex items-center justify-between">
 
                         <div className="rounded-xl bg-purple-100 p-3 text-purple-600">
+
                             <Share2 size={22} />
+
                         </div>
 
+
                         <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-700">
+
                             Social
+
                         </span>
 
                     </div>
 
+
                     <p className="mt-5 text-sm font-medium text-gray-500">
+
                         Social Posts
+
                     </p>
 
+
                     <p className="mt-1 text-4xl font-bold text-purple-600">
+
                         {stats.socialPosts}
+
                     </p>
 
                 </div>
 
+
+                {/* EMAILS */}
 
                 <div className="rounded-2xl border border-orange-100 bg-gradient-to-br from-orange-50 to-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
 
                     <div className="flex items-center justify-between">
 
                         <div className="rounded-xl bg-orange-100 p-3 text-orange-600">
+
                             <Mail size={22} />
+
                         </div>
 
+
                         <span className="rounded-full bg-orange-100 px-3 py-1 text-xs font-medium text-orange-700">
+
                             Campaigns
+
                         </span>
 
                     </div>
 
+
                     <p className="mt-5 text-sm font-medium text-gray-500">
+
                         Emails
+
                     </p>
 
+
                     <p className="mt-1 text-4xl font-bold text-orange-600">
+
                         {stats.emails}
+
                     </p>
 
                 </div>
@@ -285,33 +397,48 @@ function Dashboard() {
             </section>
 
 
-            {/* Analytics */}
+            {/* ANALYTICS */}
 
             <section className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+
+
+                {/* BAR CHART */}
 
                 <div className="rounded-2xl bg-white p-6 shadow-sm xl:col-span-2">
 
                     <div className="mb-6 flex items-center gap-3">
 
                         <div className="rounded-xl bg-blue-100 p-3 text-blue-600">
+
                             <BarChart3 size={22} />
+
                         </div>
+
 
                         <div>
 
                             <h2 className="text-2xl font-bold">
+
                                 Content Analytics
+
                             </h2>
 
+
                             <p className="text-sm text-gray-500">
+
                                 Overview of your content performance
+
                             </p>
 
                         </div>
 
                     </div>
 
-                    <ResponsiveContainer width="100%" height={320}>
+
+                    <ResponsiveContainer
+                        width="100%"
+                        height={320}
+                    >
 
                         <BarChart data={chartData}>
 
@@ -328,7 +455,9 @@ function Dashboard() {
                             />
 
                             <Tooltip
-                                cursor={{ fill: "#f8fafc" }}
+                                cursor={{
+                                    fill: "#f8fafc"
+                                }}
                             />
 
                             <Bar
@@ -343,17 +472,28 @@ function Dashboard() {
                 </div>
 
 
+                {/* PIE CHART */}
+
                 <div className="rounded-2xl bg-white p-6 shadow-sm">
 
                     <h2 className="text-2xl font-bold">
+
                         Content Breakdown
+
                     </h2>
 
+
                     <p className="mt-1 text-sm text-gray-500">
+
                         Distribution by content type
+
                     </p>
 
-                    <ResponsiveContainer width="100%" height={220}>
+
+                    <ResponsiveContainer
+                        width="100%"
+                        height={220}
+                    >
 
                         <PieChart>
 
@@ -367,14 +507,16 @@ function Dashboard() {
                             >
 
                                 {
-                                    chartData.map((entry) => (
+                                    chartData.map(
+                                        (entry) => (
 
-                                        <Cell
-                                            key={entry.name}
-                                            fill={entry.fill}
-                                        />
+                                            <Cell
+                                                key={entry.name}
+                                                fill={entry.fill}
+                                            />
 
-                                    ))
+                                        )
+                                    )
                                 }
 
                             </Pie>
@@ -388,6 +530,7 @@ function Dashboard() {
 
                     <div className="space-y-3">
 
+
                         <div className="flex items-center justify-between text-sm">
 
                             <span className="flex items-center gap-2">
@@ -398,8 +541,11 @@ function Dashboard() {
 
                             </span>
 
+
                             <span className="font-semibold">
+
                                 {getPercentage(stats.blogPosts)}% ({stats.blogPosts})
+
                             </span>
 
                         </div>
@@ -415,8 +561,11 @@ function Dashboard() {
 
                             </span>
 
+
                             <span className="font-semibold">
+
                                 {getPercentage(stats.socialPosts)}% ({stats.socialPosts})
+
                             </span>
 
                         </div>
@@ -432,8 +581,11 @@ function Dashboard() {
 
                             </span>
 
+
                             <span className="font-semibold">
+
                                 {getPercentage(stats.emails)}% ({stats.emails})
+
                             </span>
 
                         </div>
@@ -445,24 +597,32 @@ function Dashboard() {
             </section>
 
 
-            {/* Recent Content */}
+            {/* RECENT CONTENT */}
 
             <section className="rounded-2xl bg-white p-6 shadow-sm">
 
                 <div className="mb-6 flex items-center gap-3">
 
                     <div className="rounded-xl bg-blue-100 p-3 text-blue-600">
+
                         <Clock3 size={22} />
+
                     </div>
+
 
                     <div>
 
                         <h2 className="text-2xl font-bold">
+
                             Recent Generated Content
+
                         </h2>
 
+
                         <p className="text-sm text-gray-500">
+
                             Latest content you created
+
                         </p>
 
                     </div>
@@ -474,7 +634,9 @@ function Dashboard() {
                     recentContent.length === 0 ? (
 
                         <p className="text-gray-500">
+
                             No generated content yet.
+
                         </p>
 
                     ) : (
@@ -482,40 +644,56 @@ function Dashboard() {
                         <div className="space-y-4">
 
                             {
-                                recentContent.map((item) => (
+                                recentContent.map(
+                                    (item) => (
 
-                                    <div
-                                        key={item.id}
-                                        className="rounded-xl border border-gray-100 bg-gray-50 p-5 transition hover:border-blue-200 hover:bg-blue-50"
-                                    >
+                                        <div
+                                            key={item.id}
+                                            className="rounded-xl border border-gray-100 bg-gray-50 p-5 transition hover:border-blue-200 hover:bg-blue-50"
+                                        >
 
-                                        <div className="flex flex-col justify-between gap-3 md:flex-row md:items-center">
+                                            <div className="flex flex-col justify-between gap-3 md:flex-row md:items-center">
 
-                                            <div>
+                                                <div>
 
-                                                <p className="font-semibold text-gray-900">
-                                                    {item.title}
-                                                </p>
+                                                    <p className="font-semibold text-gray-900">
 
-                                                <p className="mt-1 text-sm text-gray-500">
-                                                    {item.type}
-                                                </p>
+                                                        {item.title}
+
+                                                    </p>
+
+
+                                                    <p className="mt-1 text-sm text-gray-500">
+
+                                                        {item.type}
+
+                                                    </p>
+
+                                                </div>
+
+
+                                                <span className="w-fit rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+
+                                                    Completed
+
+                                                </span>
 
                                             </div>
 
-                                            <span className="w-fit rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
-                                                Completed
-                                            </span>
+
+                                            <p className="mt-4 line-clamp-2 text-gray-600">
+
+                                                {
+                                                    item.body ||
+                                                    "No content available"
+                                                }
+
+                                            </p>
 
                                         </div>
 
-                                        <p className="mt-4 line-clamp-2 text-gray-600">
-                                            {item.body || "No content available"}
-                                        </p>
-
-                                    </div>
-
-                                ))
+                                    )
+                                )
                             }
 
                         </div>

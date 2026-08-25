@@ -5,13 +5,14 @@ const authMiddleware = (req, res, next) => {
 
     try {
 
-        const token = req.headers.authorization?.split(" ")[1];
+        const token =
+            req.headers.authorization?.split(" ")[1];
 
 
-        if(!token){
+        if (!token) {
 
             return res.status(401).json({
-                message:"No token provided"
+                message: "No token provided"
             });
 
         }
@@ -29,10 +30,10 @@ const authMiddleware = (req, res, next) => {
         next();
 
 
-    } catch(error){
+    } catch (error) {
 
         return res.status(401).json({
-            message:"Invalid token"
+            message: "Invalid token"
         });
 
     }

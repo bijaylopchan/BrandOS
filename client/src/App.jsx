@@ -14,6 +14,7 @@ import Settings from "./pages/Settings";
 import BusinessProfile from "./pages/BusinessProfile";
 import Pricing from "./pages/Pricing";
 import DemoCheckout from "./pages/DemoCheckout";
+import Account from "./pages/Account";
 
 
 function App() {
@@ -113,6 +114,17 @@ function App() {
                         <ProtectedRoute>
                             <DashboardLayout>
                                 <BusinessProfile />
+                            </DashboardLayout>
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/account"
+                    element={
+                        <ProtectedRoute>
+                            <DashboardLayout>
+                                <Account />
                             </DashboardLayout>
                         </ProtectedRoute>
                     }
