@@ -14,7 +14,7 @@ const app = express();
 const allowedOrigins = [
     "http://localhost:5173",
     "http://localhost:5174",
-    "https://brand-os-git-main-brand-os2.vercel.app"
+    "https://brand-os-sigma-ten.vercel.app"
 ];
 
 
@@ -22,34 +22,18 @@ app.use(
     cors({
         origin: (origin, callback) => {
 
-            // Allow requests with no browser origin,
-            // such as direct API/server requests.
             if (!origin) {
-
-                return callback(
-                    null,
-                    true
-                );
-
+                return callback(null, true);
             }
 
 
-            if (
-                allowedOrigins.includes(origin)
-            ) {
-
-                return callback(
-                    null,
-                    true
-                );
-
+            if (allowedOrigins.includes(origin)) {
+                return callback(null, true);
             }
 
 
             return callback(
-                new Error(
-                    "Not allowed by CORS"
-                )
+                new Error("Not allowed by CORS")
             );
 
         },
@@ -64,35 +48,23 @@ app.use(express.json());
 
 
 // Routes
-app.use(
-    "/api/auth",
-    authRoutes
-);
+app.use("/api/auth", authRoutes);
 
-app.use(
-    "/api/content",
-    contentRoutes
-);
+app.use("/api/content", contentRoutes);
 
-app.use(
-    "/api/business",
-    businessRoutes
-);
+app.use("/api/business", businessRoutes);
 
 
 // Test Route
 app.get("/", (req, res) => {
 
-    res.send(
-        "BrandOS Backend Running 🚀"
-    );
+    res.send("BrandOS Backend Running 🚀");
 
 });
 
 
 // Port
-const PORT =
-    process.env.PORT || 5001;
+const PORT = process.env.PORT || 5001;
 
 
 // Start Server
