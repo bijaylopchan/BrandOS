@@ -7,6 +7,15 @@ import {
     EyeOff
 } from "lucide-react";
 
+import {
+    FcGoogle
+} from "react-icons/fc";
+
+import {
+    FaGithub,
+    FaFacebookF
+} from "react-icons/fa";
+
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext.jsx";
 
@@ -82,6 +91,8 @@ function Login() {
 
         <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 px-6 py-12">
 
+            {/* Background decoration */}
+
             <div className="absolute -left-36 bottom-[-120px] h-[520px] w-[520px] rounded-full bg-blue-200/50 blur-3xl" />
 
             <div className="absolute -right-44 top-28 h-[430px] w-[430px] rounded-full bg-purple-200/50 blur-3xl" />
@@ -90,6 +101,8 @@ function Login() {
 
 
             <div className="relative z-10 w-full max-w-md">
+
+                {/* BrandOS Logo */}
 
                 <Link
                     to="/"
@@ -111,6 +124,8 @@ function Login() {
                 </Link>
 
 
+                {/* Login Card */}
+
                 <div className="rounded-3xl border border-white bg-white/90 p-7 shadow-2xl backdrop-blur-xl">
 
                     <div className="text-center">
@@ -125,6 +140,8 @@ function Login() {
 
                     </div>
 
+
+                    {/* Email Login */}
 
                     <form
                         onSubmit={handleSubmit}
@@ -199,14 +216,18 @@ function Login() {
                         </div>
 
 
+                        {/* Login Message */}
+
                         {
                             message && (
 
-                                <div className={`rounded-xl p-4 text-sm ${
-                                    message.includes("successful")
-                                        ? "bg-green-100 text-green-700"
-                                        : "bg-red-100 text-red-700"
-                                }`}>
+                                <div
+                                    className={`rounded-xl p-4 text-sm ${
+                                        message.includes("successful")
+                                            ? "bg-green-100 text-green-700"
+                                            : "bg-red-100 text-red-700"
+                                    }`}
+                                >
 
                                     {message}
 
@@ -233,11 +254,13 @@ function Login() {
                     </form>
 
 
+                    {/* Divider */}
+
                     <div className="my-6 flex items-center gap-3">
 
                         <div className="h-px flex-1 bg-gray-200" />
 
-                        <span className="text-sm text-gray-400">
+                        <span className="whitespace-nowrap text-sm text-gray-400">
                             or continue with
                         </span>
 
@@ -246,27 +269,59 @@ function Login() {
                     </div>
 
 
+                    {/* Social Sign In Buttons */}
+
                     <div className="grid grid-cols-3 gap-3">
 
-                        <button
-                            type="button"
-                            className="rounded-xl border border-gray-200 bg-white py-3 font-bold text-gray-700 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-                        >
-                            G
-                        </button>
+                        {/* Google */}
 
                         <button
                             type="button"
-                            className="rounded-xl border border-gray-200 bg-white py-3 font-semibold text-gray-700 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                            title="Continue with Google"
+                            className="group flex h-14 items-center justify-center rounded-xl border border-gray-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-gray-300 hover:bg-gray-50 hover:shadow-md"
                         >
-                            GitHub
+
+                            <FcGoogle
+                                size={26}
+                                className="transition group-hover:scale-110"
+                            />
+
                         </button>
+
+
+                        {/* GitHub */}
 
                         <button
                             type="button"
-                            className="rounded-xl border border-gray-200 bg-white py-3 font-bold text-blue-600 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                            title="Continue with GitHub"
+                            className="group flex h-14 items-center justify-center rounded-xl border border-gray-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-gray-300 hover:bg-gray-50 hover:shadow-md"
                         >
-                            f
+
+                            <FaGithub
+                                size={27}
+                                className="text-[#181717] transition group-hover:scale-110"
+                            />
+
+                        </button>
+
+
+                        {/* Facebook */}
+
+                        <button
+                            type="button"
+                            title="Continue with Facebook"
+                            className="group flex h-14 items-center justify-center rounded-xl border border-gray-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-gray-300 hover:bg-gray-50 hover:shadow-md"
+                        >
+
+                            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#1877F2]">
+
+                                <FaFacebookF
+                                    size={18}
+                                    className="mt-1 text-white"
+                                />
+
+                            </div>
+
                         </button>
 
                     </div>
