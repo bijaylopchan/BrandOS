@@ -210,27 +210,54 @@ const deleteContent = async (req, res) => {
         }
 
 
-        const deletedContent = await prisma.content.delete({
+        await prisma.$transaction([
 
-            where: {
+            prisma.sEOAnalysis.deleteMany({
 
-                id: contentId
+                where: {
 
-            }
+                    contentId: contentId
 
-        });
+                }
+
+            }),
+
+            prisma.toneAnalysis.deleteMany({
+
+                where: {
+
+                    contentId: contentId
+
+                }
+
+            }),
+
+            prisma.content.delete({
+
+                where: {
+
+                    id: contentId
+
+                }
+
+            })
+
+        ]);
 
 
         res.json({
 
-            message: "Content deleted successfully",
-
-            deletedContent
+            message: "Content deleted successfully"
 
         });
 
 
     } catch (error) {
+
+        console.log("========== DELETE CONTENT ERROR ==========");
+        console.log(error);
+        console.log("==========================================");
+
 
         res.status(500).json({
 
