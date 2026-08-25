@@ -11,7 +11,7 @@ The platform combines persistent business profile information with user instruct
 ## 🚀 Live Application
 
 **Frontend:**  
-https://brand-os-git-main-brand-os2.vercel.app/
+https://brand-os-sigma-ten.vercel.app/
 
 **Backend:**  
 Deployed using Render.
