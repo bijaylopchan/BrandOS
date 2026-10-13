@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
@@ -14,8 +15,12 @@ import {
     X
 } from "lucide-react";
 
+import { useAuth } from "../context/AuthContext.jsx";
+
 function DashboardLayout({ children }) {
     const navigate = useNavigate();
+
+    const { logout } = useAuth();
 
     const [menuOpen, setMenuOpen] = useState(false);
 
@@ -52,9 +57,14 @@ function DashboardLayout({ children }) {
         }
     ];
 
+    // =====================================================
+    // LOGOUT
+    // =====================================================
+
     const handleLogout = () => {
-        localStorage.removeItem("token");
-        navigate("/login");
+        logout();
+        setMenuOpen(false);
+        navigate("/login", { replace: true });
     };
 
     const closeMenu = () => {
@@ -63,8 +73,10 @@ function DashboardLayout({ children }) {
 
     return (
         <div className="min-h-screen bg-slate-50">
+
             {/* Desktop Sidebar */}
             <aside className="fixed left-0 top-0 hidden h-screen w-72 flex-col border-r border-gray-200 bg-white p-6 md:flex">
+
                 <div className="mb-10 flex items-center gap-3">
                     <div className="rounded-xl bg-blue-600 p-2 text-white">
                         <Sparkles size={22} />
@@ -98,7 +110,9 @@ function DashboardLayout({ children }) {
                     })}
                 </nav>
 
+                {/* Upgrade to Pro */}
                 <div className="mb-6 rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 p-5 text-white shadow-lg">
+
                     <div className="mb-3 flex items-center gap-2">
                         <Crown size={20} />
 
@@ -112,6 +126,7 @@ function DashboardLayout({ children }) {
                     </p>
 
                     <button
+                        type="button"
                         onClick={() => navigate("/pricing")}
                         className="mt-5 w-full rounded-lg bg-white px-4 py-2 text-sm font-semibold text-blue-600 hover:bg-gray-100"
                     >
@@ -119,7 +134,9 @@ function DashboardLayout({ children }) {
                     </button>
                 </div>
 
+                {/* Desktop Logout */}
                 <button
+                    type="button"
                     onClick={handleLogout}
                     className="flex items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium text-red-600 hover:bg-red-50"
                 >
@@ -130,6 +147,7 @@ function DashboardLayout({ children }) {
 
             {/* Mobile Header */}
             <div className="flex items-center justify-between border-b border-gray-200 bg-white px-4 py-4 md:hidden">
+
                 <div className="flex items-center gap-3">
                     <div className="rounded-xl bg-blue-600 p-2 text-white">
                         <Sparkles size={20} />
@@ -141,7 +159,9 @@ function DashboardLayout({ children }) {
                 </div>
 
                 <button
+                    type="button"
                     onClick={() => setMenuOpen(true)}
+                    aria-label="Open dashboard menu"
                     className="rounded-lg p-2 text-gray-700 hover:bg-gray-100"
                 >
                     <Menu size={24} />
@@ -164,7 +184,9 @@ function DashboardLayout({ children }) {
                         : "-translate-x-full"
                 }`}
             >
+
                 <div className="mb-8 flex items-center justify-between">
+
                     <div className="flex items-center gap-3">
                         <div className="rounded-xl bg-blue-600 p-2 text-white">
                             <Sparkles size={22} />
@@ -176,7 +198,9 @@ function DashboardLayout({ children }) {
                     </div>
 
                     <button
+                        type="button"
                         onClick={closeMenu}
+                        aria-label="Close dashboard menu"
                         className="rounded-lg p-2 text-gray-600 hover:bg-gray-100"
                     >
                         <X size={22} />
@@ -207,7 +231,9 @@ function DashboardLayout({ children }) {
                     })}
                 </nav>
 
+                {/* Mobile Upgrade to Pro */}
                 <div className="mb-6 rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 p-5 text-white shadow-lg">
+
                     <div className="mb-3 flex items-center gap-2">
                         <Crown size={20} />
 
@@ -221,6 +247,7 @@ function DashboardLayout({ children }) {
                     </p>
 
                     <button
+                        type="button"
                         onClick={() => {
                             closeMenu();
                             navigate("/pricing");
@@ -231,7 +258,9 @@ function DashboardLayout({ children }) {
                     </button>
                 </div>
 
+                {/* Mobile Logout */}
                 <button
+                    type="button"
                     onClick={handleLogout}
                     className="flex items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium text-red-600 hover:bg-red-50"
                 >
@@ -244,6 +273,7 @@ function DashboardLayout({ children }) {
             <main className="min-w-0 p-4 sm:p-6 md:ml-72 md:p-8 lg:p-10">
                 {children}
             </main>
+
         </div>
     );
 }
